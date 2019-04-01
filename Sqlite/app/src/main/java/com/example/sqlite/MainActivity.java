@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     {
         Product product = new Product(name.getText().toString(), Integer.parseInt(qty.getText().toString()));
         long i = adapter.insertData(product);
-        if(i<0)
+        if( i< 0)
         {
             Message.message(context,"Unsuccessful");
         } else
@@ -56,13 +56,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void delete(View view){
+
         int pid = Integer.parseInt(id.getText().toString().trim());
         adapter.deleteProduct(pid);
         Toast.makeText(context, "Delete Successfully", Toast.LENGTH_SHORT).show();
     }
 
-    public void getProductlist(){
-        List<Product> p = adapter.getList();
-        System.out.println(p.size());
-    }
+//    public void getProductlist(){
+//        List<Product> p = adapter.getList();
+//        System.out.println(p.size());
+//    }
 }
