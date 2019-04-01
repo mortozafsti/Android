@@ -3,8 +3,12 @@ package com.example.sqlite;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyDbAdapter {
 
@@ -22,7 +26,7 @@ public class MyDbAdapter {
         public static final String TABLE_NAME = "Product_Table";
 
         // Table columns
-        public static final String _ID = "id";
+        public static final String ID = "id";
         private static final String NAME = "name";
         private static final String quantity= "qty";
         // Database Information
@@ -32,7 +36,7 @@ public class MyDbAdapter {
         static final int DB_VERSION = 1;
 
         // Creating table query
-        private static final String CREATE_TABLE = "create table " + TABLE_NAME + "(" + _ID
+        private static final String CREATE_TABLE = "create table " + TABLE_NAME + "(" + ID
                 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME + " TEXT NOT NULL, " + quantity + " NUMBER);";
 
         public MyDbHelper(Context context) {
@@ -60,5 +64,30 @@ public class MyDbAdapter {
         contentValues.put(MyDbHelper.quantity, product.getQty());
         long id = db.insert(MyDbHelper.TABLE_NAME, null , contentValues);
         return id;
+    }
+
+    public Product findProductById(int id){
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String[] projection = {MyDbHelper.ID, MyDbHelper.NAME, MyDbHelper.quantity};
+        String selection = MyDbHelper.ID+" = "+id;
+
+        Cursor cursor = db.query(MyDbHelper.TABLE_NAME,projection,selection,null,null,null,null);
+
+        Product product = new Product();
+        if (cursor.moveToFirst()){
+            cursor.moveToFirst();
+            product.setId(Integer.parseInt(cursor.getString(0)));
+            product.setName(cursor.getString(1));
+            product.setQty(Integer.parseInt(cursor.getString(2)));
+            cursor.close();
+        }
+
+        return product;
+    }
+
+    public void deleteProduct(int id){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL(" DELETE FROM " + MyDbHelper.TABLE_NAME + "WHERE" + MyDbHelper.ID + "='" + id +"'");
+        db.close();
     }
 }

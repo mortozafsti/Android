@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText id, name,qty;
@@ -40,5 +42,27 @@ public class MainActivity extends AppCompatActivity {
         {
             Message.message(context,"Successful");
         }
+    }
+
+    public void getProductByProductId(View view){
+        int pid = Integer.parseInt(id.getText().toString().trim());
+        Product p = adapter.findProductById(pid);
+        if (p != null){
+            name.setText(p.getName());
+            qty.setText(String.valueOf(p.getQty()));
+        }else {
+            Toast.makeText(context, "No Data Exixt", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void delete(View view){
+        int pid = Integer.parseInt(id.getText().toString().trim());
+        adapter.deleteProduct(pid);
+        Toast.makeText(context, "Delete Successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    public void getProductlist(){
+        List<Product> p = adapter.getList();
+        System.out.println(p.size());
     }
 }
