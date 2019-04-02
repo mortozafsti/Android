@@ -85,9 +85,39 @@ public class MyDbAdapter {
         return product;
     }
 
+    public List<Product> getList() {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String[] projection = {MyDbHelper.ID,
+                MyDbHelper.NAME, MyDbHelper.quantity};
+        Cursor cursor = db.query(
+                MyDbHelper.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        List<Product> list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Product product = new Product(Integer.parseInt(cursor.getString(0)), cursor.getString(1), Integer.parseInt(cursor.getString(2)));
+            list.add(product);
+        }
+        cursor.close();
+        return list;
+    }
+
     public void deleteProduct(int id){
         SQLiteDatabase db = helper.getWritableDatabase();
         db.execSQL(" DELETE FROM " + MyDbHelper.TABLE_NAME + "WHERE" + MyDbHelper.ID + "='" + id +"'");
         db.close();
+    }
+    public long updateData(Product product){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(MyDbHelper.NAME, product.getName());
+        cv.put(MyDbHelper.quantity,product.getQty());
+        long id = db.update(MyDbHelper.TABLE_NAME,cv,MyDbHelper.ID+"="+String.valueOf(product.getId()),null);
+        return id;
     }
 }

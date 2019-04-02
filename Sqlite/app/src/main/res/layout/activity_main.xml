@@ -122,7 +122,21 @@
         android:layout_marginEnd="48dp"
         android:layout_marginRight="48dp"
         android:text="Delete"
+        android:onClick="delete"
         app:layout_constraintBaseline_toBaselineOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </ListView>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

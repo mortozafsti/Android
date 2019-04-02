@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -13,8 +14,9 @@ public class MainActivity extends AppCompatActivity {
 
     EditText id, name,qty;
     MyDbAdapter adapter;
-    Context context;
+    ListView listView;
 
+    Message message;
 
 
     @Override
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new MyDbAdapter(this);
 
+        getProductlist();
 
     }
 
@@ -37,10 +40,24 @@ public class MainActivity extends AppCompatActivity {
         long i = adapter.insertData(product);
         if( i< 0)
         {
-            Message.message(context,"Unsuccessful");
+            Message.message(this,"Unsuccessful");
         } else
         {
-            Message.message(context,"Successful");
+            getProductlist();
+            Message.message(this,"Successful");
+        }
+    }
+
+    public void updateUser(View view)
+    {
+        Product product = new Product(Integer.parseInt(id.getText().toString()),name.getText().toString(),Integer.parseInt(qty.getText().toString()));
+        long i = adapter.updateData(product);
+        if( i< 0)
+        {
+            Message.message(this," Update Unsuccessful");
+        } else
+        {
+            Message.message(this," Update Successful");
         }
     }
 
@@ -51,19 +68,20 @@ public class MainActivity extends AppCompatActivity {
             name.setText(p.getName());
             qty.setText(String.valueOf(p.getQty()));
         }else {
-            Toast.makeText(context, "No Data Exixt", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No Data Exixt", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void delete(View view){
-
         int pid = Integer.parseInt(id.getText().toString().trim());
         adapter.deleteProduct(pid);
-        Toast.makeText(context, "Delete Successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Delete Successfully", Toast.LENGTH_SHORT).show();
     }
 
-//    public void getProductlist(){
-//        List<Product> p = adapter.getList();
-//        System.out.println(p.size());
-//    }
+    public void getProductlist(){
+        listView = (ListView) findViewById(R.id.listview);
+        List<Product> list = adapter.getList();
+        ProductAdapter productAdapter = new ProductAdapter(this,list);
+        listView.setAdapter(productAdapter);
+    }
 }
