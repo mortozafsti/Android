@@ -72,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+
+
+
+
     public void delete(View view){
         int pid = Integer.parseInt(id.getText().toString().trim());
         adapter.deleteProduct(pid);
